@@ -7,7 +7,7 @@ counter adds a module to your control center, that shows you how many times you'
 Simply go into Settings > Control Center > Customize and enable ``counter`` from there
 
 ### Additional Info
-- In case you encounter a bug, [please create an issue here](https://github.com/cbyrne/counter/issues/new).
+In case you encounter a bug, [please create an issue here](https://github.com/cbyrne/counter/issues/new).
 
 ### Download
 Get it for free on [repo.conorthedev.me](https://repo.conorthedev.me)
