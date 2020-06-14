@@ -25,6 +25,8 @@ NSUserDefaults *defaults;
     self.unlocks++;
     [defaults setInteger:self.unlocks forKey:@"unlocks"];
     [defaults synchronize];
+
+    [[NSDistributedNotificationCenter defaultCenter] postNotificationName:@"me.conorthedev.unlockcounter/UpdateText" object:nil userInfo:nil deliverImmediately:YES];
 }
 
 - (void)reset {

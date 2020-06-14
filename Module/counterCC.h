@@ -10,6 +10,8 @@
 @property (nonatomic, strong) UIView *moduleMaterialView;
 @property (nonatomic, strong) UILabel *counterLabel;
 @property (nonatomic, strong) CounterManager *counter;
+
+- (void)updateText;
 @end
 
 @interface counterCC : NSObject <CCUIContentModule>
