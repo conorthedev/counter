@@ -3,7 +3,7 @@
 #import "Headers/CCUIContentModule-Protocol.h"
 #import "Headers/CCUIContentModuleContentViewController-Protocol.h"
 
-@interface counterViewController : UIViewController <CCUIContentModuleContentViewController>
+@interface CounterViewController : UIViewController <CCUIContentModuleContentViewController>
 @property (nonatomic, readonly) CGFloat preferredExpandedContentHeight;
 @property (nonatomic, readonly) CGFloat preferredExpandedContentWidth;
 @property (nonatomic, readonly) BOOL providesOwnPlatter;
@@ -12,6 +12,6 @@
 @end
 
 @interface counterCC : NSObject <CCUIContentModule>
-@property (nonatomic, readonly) counterViewController *contentViewController;
+@property (nonatomic, readonly) CounterViewController *contentViewController;
 @property (nonatomic, readonly) UIViewController *backgroundViewController;
 @end
