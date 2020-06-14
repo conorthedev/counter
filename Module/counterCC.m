@@ -1,19 +1,19 @@
 #import "counterCC.h"
 
+BOOL magmaEvoInstalled;
+
 CounterViewController *globalVC;
 @implementation CounterViewController
 - (CounterViewController *)initWithNibName:(NSString*)name bundle:(NSBundle*)bundle {
     self = [super initWithNibName:name bundle:bundle];
 
     if(self) {
-        self.view.clipsToBounds = YES;
-
+        magmaEvoInstalled = [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/MagmaEvo.dylib"];
         self.counter = [CounterManager sharedInstance];
 
         self.counterLabel = [[UILabel alloc] init];
         self.counterLabel.textAlignment = NSTextAlignmentCenter;
         self.counterLabel.textColor = [UIColor whiteColor];
-        self.counterLabel.text = [NSString stringWithFormat:@"%i", self.counter.unlocks];
         self.counterLabel.font = [UIFont boldSystemFontOfSize:30.0f];
         self.counterLabel.adjustsFontSizeToFitWidth = YES;
         self.counterLabel.minimumScaleFactor = 0.05;
@@ -29,18 +29,8 @@ CounterViewController *globalVC;
 
         UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(reset)];
         [self.view addGestureRecognizer:singleFingerTap];
-        
-        if([[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/MagmaEvo.dylib"]) {
-            NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.noisyflake.magmaevo.plist"];
-            NSString *togglesContainerBackground = settings[@"togglesContainerBackground"]; 
 
-            if(togglesContainerBackground) {
-                [self.view.layer setContinuousCorners:YES];
-                self.view.layer.cornerRadius = 19.0f;
-                self.view.backgroundColor = LCPParseColorString(togglesContainerBackground, @"#000000:1.00");
-            }
-        }
-
+        [self updateText];
         [[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(updateText) name:@"me.conorthedev.unlockcounter/UpdateText" object:nil];
     }
 
@@ -54,6 +44,27 @@ CounterViewController *globalVC;
 - (void)updateText {
     [self.counter sync];
     self.counterLabel.text = [NSString stringWithFormat:@"%i", self.counter.unlocks];
+
+    if(magmaEvoInstalled) {
+        NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.noisyflake.magmaevo.plist"];
+        NSString *togglesContainerBackground = settings[@"togglesContainerBackground"]; 
+        NSString *textTint = settings[@"me.conorthedev.counter.moduleEnabled"];
+
+        [self.view.layer setContinuousCorners:YES];
+        self.view.layer.cornerRadius = 19.0f;
+
+        if(togglesContainerBackground) {
+            self.view.backgroundColor = LCPParseColorString(togglesContainerBackground, @"#000000:1.00");
+        } else {
+            self.view.backgroundColor = [UIColor clearColor];
+        }
+
+        if(textTint) {
+            self.counterLabel.textColor = LCPParseColorString(textTint, @"#FFFFFF:1.00");
+        } else {
+            self.counterLabel.textColor = [UIColor whiteColor];
+        }
+    }
 }
 
 - (void)reset {
@@ -67,6 +78,17 @@ CounterViewController *globalVC;
 
 - (BOOL)shouldBeginTransitionToExpandedContentModule {
     return NO;
+}
+
+- (BOOL)providesOwnPlatter {
+    if(magmaEvoInstalled) {
+        NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.noisyflake.magmaevo.plist"];
+        NSString *togglesContainerBackground = settings[@"togglesContainerBackground"];
+        
+        return [togglesContainerBackground isEqualToString:@"#FF0000:0.00"]; 
+    } else {
+        return FALSE;
+    }
 }
 
 @end
