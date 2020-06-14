@@ -1,5 +1,4 @@
-TARGET = iphone:clang:latest:11.0
-INSTALL_TARGET_PROCESSES = SpringBoard
+TARGET = iphone:clang:13.0:11.0
 
 include $(THEOS)/makefiles/common.mk
 
