@@ -6,6 +6,8 @@ CounterViewController *globalVC;
     self = [super initWithNibName:name bundle:bundle];
 
     if(self) {
+        self.view.clipsToBounds = YES;
+
         self.counter = [CounterManager sharedInstance];
 
         self.counterLabel = [[UILabel alloc] init];
@@ -27,6 +29,17 @@ CounterViewController *globalVC;
 
         UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(reset)];
         [self.view addGestureRecognizer:singleFingerTap];
+        
+        if([[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/MagmaEvo.dylib"]) {
+            NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.noisyflake.magmaevo.plist"];
+            NSString *togglesContainerBackground = settings[@"togglesContainerBackground"]; 
+
+            if(togglesContainerBackground) {
+                [self.view.layer setContinuousCorners:YES];
+                self.view.layer.cornerRadius = 19.0f;
+                self.view.backgroundColor = LCPParseColorString(togglesContainerBackground, @"#000000:1.00");
+            }
+        }
     }
 
     return self;
