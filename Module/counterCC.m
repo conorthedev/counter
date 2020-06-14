@@ -40,12 +40,18 @@ CounterViewController *globalVC;
                 self.view.backgroundColor = LCPParseColorString(togglesContainerBackground, @"#000000:1.00");
             }
         }
+
+        [[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(updateText) name:@"me.conorthedev.unlockcounter/UpdateText" object:nil];
     }
 
     return self;
 }
 
 - (void)willBecomeActive {
+    [self updateText];
+}
+
+- (void)updateText {
     [self.counter sync];
     self.counterLabel.text = [NSString stringWithFormat:@"%i", self.counter.unlocks];
 }
