@@ -6,27 +6,24 @@
  * Design + Concept by Mirac (@thatmirac)
  */
 #import "CounterManager.h"
-#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 BOOL previouslyLocked = YES;
+
 %hook Controller
 - (void)setAuthenticated:(BOOL)authenticated {
     %orig;
-    if(authenticated) {
-        if(previouslyLocked) {
-            previouslyLocked = NO;
-            [[CounterManager sharedInstance] incrementUnlockCount];
-        }
-    } else {
-        previouslyLocked = YES;
+
+    if(authenticated && previouslyLocked) {
+        [[CounterManager sharedInstance] incrementUnlockCount];
     }
+
+    previouslyLocked = !authenticated;
 }
 
 - (void)setInScreenOffMode:(BOOL)screenOff {
     %orig;
-    if(screenOff) {
-        previouslyLocked = YES;
-    }
+    previouslyLocked = screenOff ? YES : previouslyLocked;
 }
 %end
 
