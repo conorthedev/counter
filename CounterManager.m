@@ -24,6 +24,7 @@ NSUserDefaults *defaults;
     [self sync];
     self.unlocks++;
     [defaults setInteger:self.unlocks forKey:@"unlocks"];
+    [defaults synchronize];
 }
 
 - (void)reset {
