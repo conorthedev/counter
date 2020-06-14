@@ -1,6 +1,6 @@
 Package: me.conorthedev.counter
 Name: counter
-Version: 1.0.1
+Version: 1.0.2
 Architecture: iphoneos-arm
 Description: How many times do you unlock your device?
 Maintainer: ConorTheDev <conorthedev@gmail.com>
